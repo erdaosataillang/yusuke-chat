@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>自動ログイン中</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    function initializeLiff() {
+      liff.init({ liffId: "2005512061-e5gDwgN6" }).then(() => {
+        if (liff.isLoggedIn()) {
+          liff.getProfile().then(profile => {
+            const userId = profile.userId;
+            const displayName = profile.displayName;
+            const pictureUrl = profile.pictureUrl;
+
+            // 表示名とアイコンの画像をHTMLに挿入
+            document.getElementById("greeting").innerText = `${displayName}さんこんにちは`;
+            document.getElementById("profile-picture").src = pictureUrl;
+
+            // リダイレクト処理
+            setTimeout(() => {
+              window.location.href = `https://script.google.com/macros/s/AKfycbzk0ty4iGcEg-ZnRuqQDGvFOoz34IbxeHviulv8oaMOnXUMob_6dh1sx4Ky0EdnE1Zb/exec?lineuserId=${userId}`;
+            }, 300); // 0.3秒後にリダイレクト
+          }).catch(err => {
+            console.error('Error getting profile:', err);
+          });
+        } else {
+          liff.login();
+        }
+      }).catch(err => {
+        console.error('LIFF initialization failed:', err);
+      });
+    }
+    
+    window.onload = function() {
+      initializeLiff();
+    };
+  </script>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    #profile-picture {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="greeting">雄介につないでるよ</h1>
+  <img id="profile-picture" src="" alt="Profile Picture">
+  <p>自動でログインされない場合は、開き直してください。</p>
+</body>
+</html>
